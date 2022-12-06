@@ -20,6 +20,7 @@ class _signupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  Uint8List? _image;
 
   @override
   void dispose() {
@@ -28,6 +29,13 @@ class _signupScreenState extends State<SignupScreen> {
     _bioController.dispose();
     _usernameController.dispose();
     super.dispose();
+  }
+
+  void selectImage() async {
+    Uint8List image = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = image;
+    });
   }
 
   @override
@@ -55,11 +63,14 @@ class _signupScreenState extends State<SignupScreen> {
           //profile picture
           Stack(
             children: [
-              const CircleAvatar(
-                radius: 64,
-                backgroundImage: NetworkImage(
-                    'https://images.unsplash.com/photo-1665686377065-08ba896d16fd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80'),
-              ),
+              _image != null
+                  ? CircleAvatar(
+                      radius: 64, backgroundImage: MemoryImage(_image!))
+                  : const CircleAvatar(
+                      radius: 64,
+                      backgroundImage: NetworkImage(
+                          'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg'),
+                    ),
               Positioned(
                   bottom: -10,
                   left: 80,
@@ -155,9 +166,5 @@ class _signupScreenState extends State<SignupScreen> {
         ]),
       )),
     );
-  }
-
-  void selectImage() async {
-    Uint8List image = await pickImage(ImageSource.gallery);
   }
 }
