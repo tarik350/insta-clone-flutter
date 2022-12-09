@@ -10,3 +10,5 @@ pickImage(ImageSource source) async {
     return await file.readAsBytes();
   }
 }
+
+showSnackBar(BuildContext context, String res) {}
