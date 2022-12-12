@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram_flutter/resources/auth_methods.dart';
+import 'package:instagram_flutter/responsive/mobile_screen_layout.dart';
+import 'package:instagram_flutter/responsive/responsive_layout.dart';
+import 'package:instagram_flutter/responsive/web_screen_layout.dart';
+import 'package:instagram_flutter/screens/login_screen.dart';
 
 import 'package:instagram_flutter/utils/colors.dart';
 import 'package:instagram_flutter/utils/utils.dart';
@@ -21,6 +25,7 @@ class _signupScreenState extends State<SignupScreen> {
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   Uint8List? _image;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -38,17 +43,33 @@ class _signupScreenState extends State<SignupScreen> {
     });
   }
 
+  void navigateToLogin() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: ((context) => LoginScreen())));
+  }
+
   void signUpUser() async {
+    setState(() {
+      _isLoading = true;
+    });
     final String res = await AuthMethods().signupUser(
         bio: _bioController.text,
         email: _emailController.text,
         password: _passwordController.text,
         username: _usernameController.text,
         file: _image!);
+    setState(() {
+      _isLoading = false;
+    });
 
-        if(res != 'success'){
-          
-        }
+    if (res != 'success') {
+      showSnackBar(context, res);
+    } else {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const ResponsiveLayout(
+              mobileScreenLayout: MobileScreenLayout(),
+              webScreenLayout: webScreenLayout())));
+    }
   }
 
   @override
@@ -141,10 +162,21 @@ class _signupScreenState extends State<SignupScreen> {
                   color: blueColor,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(4)))),
-              child: const Text(
-                'sginup',
-                style: TextStyle(),
-              ),
+              child: _isLoading
+                  ? const Center(
+                      child: SizedBox(
+                        height: 18,
+                        width: 18,
+                        child: CircularProgressIndicator(
+                          color: primaryColor,
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    )
+                  : const Text(
+                      'sginup',
+                      style: TextStyle(),
+                    ),
             ),
           ),
           SizedBox(
@@ -160,11 +192,11 @@ class _signupScreenState extends State<SignupScreen> {
             children: [
               Container(
                   padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: const Text('don\'t have an accunt?')),
+                  child: const Text('already have an account?')),
               GestureDetector(
-                  onTap: () {},
+                  onTap: navigateToLogin,
                   child: const Text(
-                    'signup',
+                    'Login',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ))
             ],
