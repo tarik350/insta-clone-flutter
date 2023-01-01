@@ -2,9 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class User {
+  /// we don't need password field in user model because it will be saved as UserCredentials upon signup
   final String username;
   final String bio;
-  final String password;
+  final String uid;
   final String email;
   final String photoUrl;
   final List followers;
@@ -13,7 +14,7 @@ class User {
   User(
       {required this.email,
       required this.bio,
-      required this.password,
+      required this.uid,
       required this.username,
       required this.followers,
       required this.following,
@@ -23,7 +24,7 @@ class User {
         "username": username,
         "email": email,
         "bio": bio,
-        "password": password,
+        'uid': uid,
         "photoUrl": photoUrl,
         "followers": followers,
         "following": following
@@ -35,9 +36,9 @@ class User {
     return User(
         email: snap['email'],
         bio: snap['bio'],
+        uid: snap['uid'],
         username: snap['username'],
         followers: snap['followers'],
-        password: snap['password'],
         following: snap['following'],
         photoUrl: snap['photoUrl']);
   }

@@ -16,7 +16,6 @@ class AuthMethods {
         await _firestore.collection('users').doc(currentUser.uid).get();
 
     ///fromsnap converts docsnapshot to json format
-    ///
     return model.User.fromSnap(snap);
   }
 
@@ -38,19 +37,20 @@ class AuthMethods {
         //register user -- which means authentication
         UserCredential credential = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
-        print(credential.user!.uid);
+        // print(credential.user!.uid);
 
         String photoUrl = await StorageMethods()
             .uploadImgeToStorage('profilePics', file, false);
         //first we created a user model -- in order to save it on db collection
         model.User user = model.User(
-            bio: bio,
-            username: username,
-            email: email,
-            photoUrl: photoUrl,
-            followers: [],
-            following: [],
-            password: password);
+          bio: bio,
+          uid: _auth.currentUser!.uid,
+          username: username,
+          email: email,
+          photoUrl: photoUrl,
+          followers: [],
+          following: [],
+        );
 
         //add user to our database
         // this is a more preferred option but both do the same thing

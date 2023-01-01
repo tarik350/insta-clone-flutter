@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:instagram_flutter/providers/user_provider.dart';
-import 'package:instagram_flutter/utils/dimensions.dart';
+import 'package:instagram_flutter/utils/global_variables.dart';
 import 'package:provider/provider.dart';
 
 class ResponsiveLayout extends StatefulWidget {
@@ -20,8 +20,6 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
   @override
   void initState() {
     super.initState();
-    print('--=0=-0=-=-=-0=-0=-0=-0= responsive layout');
-
     addData();
   }
 
@@ -31,9 +29,7 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
 
     ///I have to study more about listeners and providers
     /// we are calling the refereshUser method on UserProvider
-    print('--p9909-90-0 before');
     await userProvider.refreshUser();
-    print('--90-98-89 after');
   }
 
   Widget build(BuildContext context) {
